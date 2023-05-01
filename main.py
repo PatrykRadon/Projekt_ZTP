@@ -12,7 +12,7 @@ from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__) #Initialize the flask App
 
-model = joblib.load('models/apartment_classification/latest.joblib') 
+
 
 @app.route('/')
 def home():
@@ -22,6 +22,8 @@ def home():
 @app.route('/predict',methods=['GET', 'POST'])
 def predict():
 
+    model = joblib.load('models/apartment_classification/latest.joblib') 
+    
     def parse_input():
         return [[
             float(request.args.get('square_meters')),
@@ -46,33 +48,42 @@ def retrain_model():
     
     
     df = dd.read_parquet('./data/train_set.parquet/*')
-    df_test = dd.read_parquet('./data/test_set.parquet/*')
-    
     
     X = df[['sqare_meters','rooms','age','price']]
     y = df.sold.astype(int)
-
-    X_test = df_test[['sqare_meters','rooms','age','price']]
-    y_test = df_test.sold.astype(int)
     
     pipe = Pipeline([('scaler', StandardScaler()), ('lr', LogisticRegression())])
     parameters = {'lr__C': [0.1, 1, 10]}
     clf = GridSearchCV(pipe, parameters)
     clf.fit(X.values, y) 
     
-    y_test_pred = clf.predict_proba(X_test.values.compute_chunk_sizes())
-    
-    acc = accuracy_score(y_true=y_test, y_pred=y_test_pred[:,1] > 0.5)
-    auc = roc_auc_score(y_true=y_test, y_score=y_test_pred[:,1])    
-    
     new_model = joblib.dump(clf, 'models/apartment_classification/latest.joblib') 
     
     
     return jsonify(
-        new_model = new_model,
+        new_model = new_model
+    )
+    
+    
+@app.route('/test_model',methods=['GET'])
+def test_model():
+    
+    model = joblib.load('models/apartment_classification/latest.joblib') 
+    df_test = dd.read_parquet('./data/test_set.parquet/*')
+    X_test = df_test[['sqare_meters','rooms','age','price']]
+    y_test = df_test.sold.astype(int)
+    
+    y_test_pred = model.predict_proba(X_test.values.compute_chunk_sizes())
+    
+    acc = accuracy_score(y_true=y_test, y_pred=y_test_pred[:,1] > 0.5)
+    auc = roc_auc_score(y_true=y_test, y_score=y_test_pred[:,1])    
+    
+    
+    return jsonify(
         acc=acc,
         auc=auc
     )
+    
     
 if __name__ == "__main__":
     app.run(debug=True,host='0.0.0.0')
