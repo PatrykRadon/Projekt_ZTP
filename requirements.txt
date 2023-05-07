@@ -1,0 +1,8 @@
+dask==2022.7.0
+dask-ml==2023.3.24
+Flask
+joblib==1.1.1
+numpy==1.23.5
+pandas==1.4.4
+scikit_learn==1.2.0
+jinja2
