@@ -1,9 +1,7 @@
 # Docker setup
-docker build . -t apud 
+docker-compose -f docker-compose.yml up -d --build
 
-docker run -d apud    
-
-This will launch docker container with Flask server
+This will launch docker container with Flask server + cron job
 
 ### Test
-http://localhost:5000/houses
+http://127.0.0.1:5000/houses
