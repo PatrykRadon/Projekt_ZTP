@@ -3,7 +3,7 @@ import dask.dataframe as dd
 from dask_ml.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 # from dask_ml.preprocessing import StandardScaler
-from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.metrics import roc_auc_score, accuracy_score, log_loss, mean_absolute_error, mean_squared_error
 import joblib
 from flask import request
 from sklearn.pipeline import Pipeline
@@ -11,6 +11,7 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 from datetime import datetime
 from uuid import uuid4
+from numpy import sqrt
 
 app = Flask(__name__)
 
@@ -76,10 +77,16 @@ def test_model():
 
     acc = accuracy_score(y_true=y_test, y_pred=y_test_pred[:, 1] > 0.5)
     auc = roc_auc_score(y_true=y_test, y_score=y_test_pred[:, 1])
+    loss = log_loss(y_test, y_test_pred)
+    mae = mean_absolute_error(y_true=y_test, y_score=y_test_pred[:, 1])
+    rmse = sqrt(mean_squared_error(y_true=y_test, y_score=y_test_pred[:, 1]))
 
     return jsonify(
         acc=acc,
-        auc=auc
+        auc=auc,
+        loss=loss,
+        mae=mae,
+        rmse=rmse
     )
 
 @app.route('/houses', methods=['GET'])
