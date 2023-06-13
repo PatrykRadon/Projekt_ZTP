@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tytul</title>
+
+</head>
+
+<body>
+    <h1>Retrain Model</h1>
+    <button id="retrain-button">Retrain Model</button>
+
+    <script>
+        // Add event listener to the button
+        document.getElementById('retrain-button').addEventListener('click', function () {
+            // Make a GET request to the /retrain_model endpoint
+            fetch('/retrain_model')
+                .then(function (response) {
+                    // Handle the response
+                    return response.json();
+                })
+                .then(function (data) {
+                    // Display the response message
+                    alert(data.new_model);
+                })
+                .catch(function (error) {
+                    // Handle any errors
+                    console.error(error);
+                });
+        });
+    </script>
+    <h1>Post a new house</h1>
+    <form id="houseForm">
+        <label for="square_meters">Square meters:</label><br>
+        <input type="number" id="square_meters" name="square_meters" required><br>
+        <label for="rooms">Rooms:</label><br>
+        <input type="number" id="rooms" name="rooms" required><br>
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age" required><br>
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" name="price" required><br>
+        <label for="expiration_timestamp">Expiration timestamp:</label><br>
+        <input type="text" id="expiration_timestamp" name="expiration_timestamp"
+            placeholder="Mon, 13 Jun 2023 15:00:00 UTC" required><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <button id="get-houses-button">Get Houses Data</button>
+
+    <script>
+        document.getElementById('get-houses-button').addEventListener('click', function () {
+            fetch('/houses')
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    alert(JSON.stringify(data)); // Print the data to the browser console
+                })
+                .catch(function (error) {
+                    console.error(error);
+                });
+        });
+    </script>
+
+    <script>
+        document.getElementById('houseForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // prevent the form from submitting normally
+
+            var squareMeters = document.getElementById('square_meters').value;
+            var rooms = document.getElementById('rooms').value;
+            var age = document.getElementById('age').value;
+            var price = document.getElementById('price').value;
+            var expirationTimestamp = document.getElementById('expiration_timestamp').value;
+
+            fetch('/houses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "square_meters": 12,
+                    "rooms": 12,
+                    "age": 12,
+                    "price": 12,
+                    "expiration_timestamp": "Mon, 13 Jun 2023 15:00:00 UTC"
+                }),
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+
+    <button id="post-house-button">Post House Data</button>
+
+    <script>
+        document.getElementById('post-house-button').addEventListener('click', function () {
+            fetch('/houses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "square_meters": 200,
+                    "rooms": 25,
+                    "age": 25,
+                    "price": 25,
+                    "expiration_timestamp": "Mon, 13 Jun 2023 15:00:00 UTC"
+                }),
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
