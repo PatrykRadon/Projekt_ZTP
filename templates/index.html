@@ -14,7 +14,7 @@
         // Add event listener to the button
         document.getElementById('retrain-button').addEventListener('click', function () {
             // Make a GET request to the /retrain_model endpoint
-            fetch('http://127.0.0.1:5000/retrain_model')
+            fetch('/retrain_model')
                 .then(function (response) {
                     // Handle the response
                     return response.json();
@@ -51,7 +51,7 @@
 
     <script>
         document.getElementById('get-houses-button').addEventListener('click', function () {
-            fetch('http://127.0.0.1:5000/houses')
+            fetch('/houses')
                 .then(function (response) {
                     return response.json();
                 })
@@ -98,7 +98,7 @@
             const blob = new Blob([JSON.stringify(obj)], {
                 type: "application/json",
             });
-            fetch('http://127.0.0.1:5000/houses', {
+            fetch('/houses', {
                 method: 'POST',
                 headers: {
                     mode: "cors",
@@ -121,7 +121,7 @@
     <script>
         document.getElementById('post-house-button').addEventListener('click', function () {
 
-            fetch('http://127.0.0.1:5000/houses', {
+            fetch('/houses', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
