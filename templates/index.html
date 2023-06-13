@@ -3,7 +3,22 @@
 
 <head>
     <title>Tytul</title>
+    <script>
+        function fetchData() {
+            fetch('/test_model', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('results').innerHTML =
+                        'Accuracy: ' + data.acc + '<br>' +
+                        'AUC: ' + data.auc + '<br>' +
+                        'Loss: ' + data.loss + '<br>' +
+                        'MAE: ' + data.mae + '<br>' +
+                        'RMSE: ' + data.rmse;
+                })
+                .catch(error => console.error('Error:', error));
+        };
 
+    </script>
 </head>
 
 <body>
@@ -57,15 +72,15 @@
                 })
                 .then(function (data) {
                     var result = "<table border='1'>\n"
-                    for (const data_ of data["data"]){
+                    for (const data_ of data["data"]) {
                         console.log(data_);
                         result += "<tr>" +
-                            "<td> Age: " + data_["age"] +  "</td> " +
-                            "<td> Expired: " + data_["expiration_timestamp"] +  "</td> " +
-                            "<td> Price: " + data_["price"] +  "</td> " +
-                            "<td> Rooms: " + data_["rooms"] +  "</td> " +
-                            "<td> Square meters: " + data_["sqare_meters"] +  "</td> " +
-                            "<td> <button id=\"buy_house\">Buy</button>  </td> " +
+                            "<td> Age: " + data_["age"] + "</td> " +
+                            "<td> Expired: " + data_["expiration_timestamp"] + "</td> " +
+                            "<td> Price: " + data_["price"] + "</td> " +
+                            "<td> Rooms: " + data_["rooms"] + "</td> " +
+                            "<td> Square meters: " + data_["sqare_meters"] + "</td> " +
+                            "<td> <button id=\"buy_house\" onclick=myScript(\"" + data_["id"] + "\") >Buy</button>  </td> " +
                             "</tr>\n"
                     }
                     result += "</table>"
@@ -76,6 +91,32 @@
                 });
         });
     </script>
+    <script>
+        function myScript(id) {
+            var obj = {
+                "id": id,
+            };
+
+            const blob = new Blob([JSON.stringify(obj)], {
+                type: "application/json",
+            });
+            fetch('/houses', {
+                method: 'PUT',
+                headers: {
+                    mode: "cors",
+                    cache: "no-cache",
+                    credentials: "same-origin",
+                    'Content-Type': 'application/json',
+                },
+                body: blob,
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            console.log("TEST");
+        }</script>
 
     <script>
         document.getElementById('houseForm').addEventListener('submit', function (event) {
@@ -128,10 +169,10 @@
                 },
                 body: JSON.stringify({
                     "square_meters": 200,
-                    "rooms": 25,
-                    "age": 25,
-                    "price": 25,
-                    "expiration_timestamp": "Mon, 13 Jun 2023 15:00:00 UTC"
+                    "rooms": 8,
+                    "age": 80,
+                    "price": 2500000,
+                    "expiration_timestamp": "Mon, 20 Jun 2026 15:00:00 UTC"
                 }),
             })
                 .then(response => response.json())
@@ -142,5 +183,8 @@
         });
     </script>
 </body>
+<h1>Test Model Results</h1>
+<button onclick="fetchData()">Get Results</button>
+<div id="results"></div>
 
 </html>
