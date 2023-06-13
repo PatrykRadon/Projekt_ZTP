@@ -14,7 +14,7 @@
         // Add event listener to the button
         document.getElementById('retrain-button').addEventListener('click', function () {
             // Make a GET request to the /retrain_model endpoint
-            fetch('/retrain_model')
+            fetch('http://127.0.0.1:5000/retrain_model')
                 .then(function (response) {
                     // Handle the response
                     return response.json();
@@ -79,7 +79,7 @@
 
     <script>
         document.getElementById('houseForm').addEventListener('submit', function (event) {
-            event.preventDefault();  // prevent the form from submitting normally
+            event.preventDefault();
 
             var squareMeters = document.getElementById('square_meters').value;
             var rooms = document.getElementById('rooms').value;
@@ -88,27 +88,21 @@
             var expirationTimestamp = document.getElementById('expiration_timestamp').value;
 
             var obj = {
-                "square_meters": squareMeters,
-                "rooms": rooms,
-                "age": age,
-                "price": price,
+                "square_meters": parseInt(squareMeters),
+                "rooms": parseInt(rooms),
+                "age": parseInt(age),
+                "price": parseInt(price),
                 "expiration_timestamp": expirationTimestamp
             };
-            // obj["square_meters"] = squareMeters;
-            // obj["rooms"] = rooms;
-            // obj["age"] = age;
-            // obj["price"] = price;
-            // obj["expiration_timestamp"] = expirationTimestamp;
+
             const blob = new Blob([JSON.stringify(obj)], {
                 type: "application/json",
             });
-            alert(JSON.stringify(blob));
-            alert(squareMeters);
-            fetch('/houses', {
+            fetch('http://127.0.0.1:5000/houses', {
                 method: 'POST',
                 headers: {
-                    mode: "cors", // no-cors, *cors, same-origin
-                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    mode: "cors",
+                    cache: "no-cache",
                     credentials: "same-origin",
                     'Content-Type': 'application/json',
                 },
@@ -126,7 +120,8 @@
 
     <script>
         document.getElementById('post-house-button').addEventListener('click', function () {
-            fetch('/houses', {
+
+            fetch('http://127.0.0.1:5000/houses', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
