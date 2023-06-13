@@ -157,7 +157,7 @@ def append_data(data, result):
 def move_data_to_train_set(expired_data, sold=False):
     df = pd.read_parquet('./data/train_set.parquet')
     expired_data = expired_data[['sqare_meters', 'rooms', 'age', 'price']]
-    expired_data['sold'] = str(sold)
+    expired_data['sold'] = sold
 
     df = df.append(expired_data)
 

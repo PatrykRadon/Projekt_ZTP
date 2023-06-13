@@ -16,3 +16,8 @@ df_test = pd.read_parquet('./data/active_set.parquet')
 
 for index, row in df_test.iterrows():
     print(row)
+
+# df_test = pd.read_parquet('./data/test_set.parquet')
+
+# for index, row in df_test.iterrows():
+#     print(row)
