@@ -78,7 +78,8 @@ def test_model():
 
     acc = accuracy_score(y_true=y_test, y_pred=y_test_pred[:, 1] > 0.5)
     auc = roc_auc_score(y_true=y_test, y_score=y_test_pred[:, 1])
-    loss = log_loss(y_test, y_test_pred)    mae = mean_absolute_error(y_true=y_test, y_pred=y_test_pred[:, 1])
+    loss = log_loss(y_test, y_test_pred)    
+    mae = mean_absolute_error(y_true=y_test, y_pred=y_test_pred[:, 1])
     rmse = sqrt(mean_squared_error(y_true=y_test, y_pred=y_test_pred[:, 1]))
 
     return jsonify(

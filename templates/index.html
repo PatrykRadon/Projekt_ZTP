@@ -72,18 +72,32 @@
             var price = document.getElementById('price').value;
             var expirationTimestamp = document.getElementById('expiration_timestamp').value;
 
+            var obj = {
+                "square_meters": squareMeters,
+                "rooms": rooms,
+                "age": age,
+                "price": price,
+                "expiration_timestamp": expirationTimestamp
+            };
+            // obj["square_meters"] = squareMeters;
+            // obj["rooms"] = rooms;
+            // obj["age"] = age;
+            // obj["price"] = price;
+            // obj["expiration_timestamp"] = expirationTimestamp;
+            const blob = new Blob([JSON.stringify(obj)], {
+                type: "application/json",
+            });
+            alert(JSON.stringify(blob));
+            alert(squareMeters);
             fetch('/houses', {
                 method: 'POST',
                 headers: {
+                    mode: "cors", // no-cors, *cors, same-origin
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: "same-origin",
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    "square_meters": 12,
-                    "rooms": 12,
-                    "age": 12,
-                    "price": 12,
-                    "expiration_timestamp": "Mon, 13 Jun 2023 15:00:00 UTC"
-                }),
+                body: blob,
             })
                 .then(response => response.json())
                 .then(data => console.log(data))
