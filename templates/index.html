@@ -47,14 +47,29 @@
 
     <button id="get-houses-button">Get Houses Data</button>
 
+    <div id="test"></div>
+
     <script>
         document.getElementById('get-houses-button').addEventListener('click', function () {
-            fetch('/houses')
+            fetch('http://127.0.0.1:5000/houses')
                 .then(function (response) {
                     return response.json();
                 })
                 .then(function (data) {
-                    alert(JSON.stringify(data)); // Print the data to the browser console
+                    var result = "<table border='1'>\n"
+                    for (const data_ of data["data"]){
+                        console.log(data_);
+                        result += "<tr>" +
+                            "<td> Age: " + data_["age"] +  "</td> " +
+                            "<td> Expired: " + data_["expiration_timestamp"] +  "</td> " +
+                            "<td> Price: " + data_["price"] +  "</td> " +
+                            "<td> Rooms: " + data_["rooms"] +  "</td> " +
+                            "<td> Square meters: " + data_["sqare_meters"] +  "</td> " +
+                            "<td> <button id=\"buy_house\">Buy</button>  </td> " +
+                            "</tr>\n"
+                    }
+                    result += "</table>"
+                    document.getElementById("test").innerHTML = result;
                 })
                 .catch(function (error) {
                     console.error(error);
